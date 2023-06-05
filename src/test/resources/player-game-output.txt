@@ -1,0 +1,90 @@
+Welcome to BattleSalvo!
+Please enter a valid height and width:
+Please enter your fleet in the order [Carrier, Battleship, Destroyer, Submarine].
+Your fleet size may not exceed 6 and must contain at least one of each ship.
+Opponent's Board:
+. . . . . .
+. . . . . .
+. . . . . .
+. . . . . .
+. . . . . .
+. . . . . .
+
+Your Board:
+S . . S . .
+S . S S . .
+S S S S . .
+S S S S . .
+. S S S . .
+. . S S . .
+
+Please enter 4 shots:
+Opponent's Board:
+H . . . . .
+H . . . . .
+H . . . . .
+H . . . . .
+. . . . . .
+. . . . . .
+
+Your Board:
+S . . S . .
+S . S S M .
+S S H S . .
+S S S H . .
+. S S H . .
+. . S S . .
+
+Please enter 4 shots:
+Opponent's Board:
+H . . . . .
+H . H . . .
+H H . . . .
+H H . . . .
+. H . . . .
+. . . . . .
+
+Your Board:
+S . . H M .
+S . S S M .
+S S H S . .
+S S S H . .
+. S S H M .
+. . S S . .
+
+Please enter 4 shots:
+Opponent's Board:
+H . . . . .
+H . H . . .
+H H H . . .
+H H H . . .
+. H H . . .
+. . H . . .
+
+Your Board:
+S . . H M .
+S . S S M .
+S S H S M .
+S S S H . .
+. S S H M .
+. . S S M .
+
+Please enter 4 shots:
+Opponent's Board:
+H . . H . .
+H . H H . .
+H H H H . .
+H H H H . .
+. H H . . .
+. . H . . .
+
+Your Board:
+S . . H M .
+S . S S M .
+S S H S M .
+S S S H . .
+M S S H M .
+. . S S M .
+
+Please enter 4 shots:
+You won the game!

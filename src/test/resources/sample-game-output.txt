@@ -1,0 +1,5 @@
+Welcome to BattleSalvo!
+Please enter a valid height and width:
+Please enter your fleet in the order [Carrier, Battleship, Destroyer, Submarine].
+Your fleet size may not exceed 6 and must contain at least one of each ship.
+You lost the game!
