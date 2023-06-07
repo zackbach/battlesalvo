@@ -1,9 +1,13 @@
 package cs3500.pa03.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Represents a non-negative Coordinate
  */
-public record Coord(int x, int y) {
+public record Coord(
+    @JsonProperty("x") int x,
+    @JsonProperty("y") int y) {
   /**
    * Constructs a Coord with the given (non-negative) x and y
    *
