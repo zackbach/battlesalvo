@@ -1,15 +1,18 @@
 package cs3500.pa03.model;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 /**
  * Represents an AI BattleSalvo player
  */
 public class AiPlayer extends AbstractPlayer {
-
+  private final Queue<Coord> nextShots;
+  
   /**
    * Constructs a new AiPlayer with the given random number generator
    *
@@ -17,6 +20,7 @@ public class AiPlayer extends AbstractPlayer {
    */
   public AiPlayer(Random rand) {
     super(rand);
+    this.nextShots = new ArrayDeque<>();
   }
 
   /**
@@ -33,8 +37,8 @@ public class AiPlayer extends AbstractPlayer {
    */
   @Override
   public String name() {
-    // as per Piazza @777_f1, hardcoded player name
-    return "AI Player";
+    // as per Piazza @777_f1, hardcoded player name = github username
+    return "zackbach";
   }
 
   /**
@@ -51,16 +55,75 @@ public class AiPlayer extends AbstractPlayer {
       throw new IllegalStateException("board has not been set up");
     }
     
-    // while the AI logic can (and will) be improved later,
-    // it currently randomly fires shots among locations that have not been hit
+    int volleySize = this.board.getUnsunkShipTotal();
+    List<Coord> shots = new ArrayList<>();
+    
+    // start by taking shots from the queue
+    while (volleySize > 0 && !this.nextShots.isEmpty()) {
+      shots.add(this.nextShots.remove());
+      volleySize--;
+    }
+    
+    // add remaining shots (if possible)
     List<Coord> randomOptions = new ArrayList<>(this.getUnfiredShots());
     Collections.shuffle(randomOptions, this.rand);
     
     // if there are more ships left than unfired locations, 
     // this will fire shots equal to the number of unfired locations 
-    List<Coord> shots = randomOptions.stream().limit(this.board.getUnsunkShipTotal()).toList();
+    List<Coord> randomShots = randomOptions.stream()
+                                           .filter(c -> !shots.contains(c))
+                                           .limit(volleySize)
+                                           .toList();
+    
+    shots.addAll(randomShots);
     this.prevSalvo.addAll(shots);
     return shots;
+  }
+
+  /**
+   * Reports to this player what shots in their previous volley returned from takeShots()
+   * successfully hit an opponent's ship.
+   *
+   * @param shotsThatHitOpponentShips the list of shots that successfully hit the opponent's ships
+   * @throws IllegalStateException if the board has not been set up
+   */
+  @Override
+  public void successfulHits(List<Coord> shotsThatHitOpponentShips) {
+    super.successfulHits(shotsThatHitOpponentShips);
+    // adds neighbors of successful shots to queue after processing hits
+    this.addNeighbors(shotsThatHitOpponentShips);
+  }
+    
+  /**
+   * Adds the neighbors of the given coords to the nextShots queue
+   *
+   * @param coords the shots whose neighbors are added
+   */
+  private void addNeighbors(List<Coord> coords) {
+    for (Coord coord : coords) {
+      int x = coord.x();
+      int y = coord.y();
+      List<Coord> neighbors = new ArrayList<>();
+      
+      neighbors.add(new Coord(x + 1, y));
+      neighbors.add(new Coord(x, y + 1));
+      // to prevent negative coords from being constructed and throwing an error
+      if (x != 0) {
+        neighbors.add(new Coord(x - 1, y));
+      }
+      if (y != 0) {
+        neighbors.add(new Coord(x, y - 1));
+      }
+      
+      // take only the neighboring shots that are valid coordinates that have not been tried before
+      List<Coord> filtered = neighbors.stream()
+                                      .filter(c -> !this.nextShots.contains(c))
+                                      .filter(c -> !this.opponentBoard.isInvalidCoord(c))
+                                      .filter(c -> 
+                                          this.opponentBoard.getCellState(c) == CellState.WATER)
+                                      .toList();
+      this.nextShots.addAll(filtered);
+    }
   }
 
   /**

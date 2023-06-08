@@ -132,6 +132,7 @@ public class ProxyController implements GameController {
     MessageJson message = new MessageJson("take-shots", jsonResponse);
     JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
     this.out.println(jsonMessage);
+    System.out.println(jsonMessage);
   }
 
   /**

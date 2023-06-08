@@ -20,7 +20,7 @@ class AiPlayerTest {
   @Test
   public void testAiPlayer() {
     Player ai = new AiPlayer();
-    assertEquals("AI Player", ai.name());
+    assertEquals("zackbach", ai.name());
     Map<ShipType, Integer> specs = new HashMap<>();
     specs.put(ShipType.CARRIER, 1);
     specs.put(ShipType.BATTLESHIP, 1);
@@ -58,7 +58,6 @@ class AiPlayerTest {
   public void testTakeShots() {
     // unlike above, use seeded random here
     Player ai = new AiPlayer(new Random(1));
-    assertEquals("AI Player", ai.name());
     Map<ShipType, Integer> specs = new HashMap<>();
     specs.put(ShipType.CARRIER, 2);
     specs.put(ShipType.BATTLESHIP, 1);
@@ -76,8 +75,10 @@ class AiPlayerTest {
     ai.successfulHits(List.of(new Coord(3, 3)));
 
     // none of these shots taken will be the same as the shots taken above
-    List<Coord> shotsTaken2 = new ArrayList<>(Arrays.asList(new Coord(1, 4), new Coord(4, 1),
-        new Coord(5, 1), new Coord(2, 2), new Coord(1, 3)));
+    // note that the shots here are neighboring to (3, 3)
+    // also, (3, 2) is not shot at, even though it is neighboring, since it has been hit before
+    List<Coord> shotsTaken2 = new ArrayList<>(Arrays.asList(new Coord(4, 3), new Coord(3, 4),
+        new Coord(2, 3), new Coord(1, 4), new Coord(4, 1)));
     
     assertEquals(shotsTaken2, ai.takeShots());
     // mark all of those shots as misses, to clear internal state
@@ -87,7 +88,7 @@ class AiPlayerTest {
     for (int i = 0; i < 5; i++) {
       // 5 shots should be taken each time, since the AI has 5 ships remaining
       assertEquals(5, ai.takeShots().size());
-      // mark them as misses so they aren't fired at again
+      // mark them as misses, so they aren't fired at again
       ai.successfulHits(new ArrayList<>());
     }
     

@@ -90,6 +90,5 @@ class ManualControllerTest {
     } catch (IOException e) {
       fail();
     }
-
   }
 }
