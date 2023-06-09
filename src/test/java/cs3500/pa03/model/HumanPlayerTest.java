@@ -83,7 +83,6 @@ class HumanPlayerTest {
     assertThrows(IllegalStateException.class, player::takeShots);
     assertThrows(IllegalStateException.class, () -> player.reportDamage(List.of()));
     assertThrows(IllegalStateException.class, () -> player.successfulHits(List.of()));
-    assertThrows(IllegalStateException.class, () -> player.endGame(GameResult.WIN, "win"));
 
     Map<ShipType, Integer> specs = new HashMap<>();
     specs.put(ShipType.CARRIER, 2);

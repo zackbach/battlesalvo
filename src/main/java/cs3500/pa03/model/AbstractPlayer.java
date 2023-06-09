@@ -158,15 +158,9 @@ public abstract class AbstractPlayer implements Player {
    *
    * @param result if the player has won, lost, or forced a draw
    * @param reason the reason for the game ending
-   * @throws IllegalStateException if the board has not been set up
    */
   @Override
   public void endGame(GameResult result, String reason) {
-    if (!this.isSetup) {
-      throw new IllegalStateException("board has not been set up");
-    }
-    
     // as of current, this method serves no purpose
-    // in PA04, it will close sockets / etc
   }
 }

@@ -107,7 +107,6 @@ class AiPlayerTest {
     assertThrows(IllegalStateException.class, ai::takeShots);
     assertThrows(IllegalStateException.class, () -> ai.reportDamage(List.of()));
     assertThrows(IllegalStateException.class, () -> ai.successfulHits(List.of()));
-    assertThrows(IllegalStateException.class, () -> ai.endGame(GameResult.WIN, "win"));
 
     Map<ShipType, Integer> specs = new HashMap<>();
     specs.put(ShipType.CARRIER, 2);
