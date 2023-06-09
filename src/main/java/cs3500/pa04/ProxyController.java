@@ -101,10 +101,7 @@ public class ProxyController implements GameController {
    */
   private void handleJoin() {
     JoinJson response = new JoinJson(this.player.name(), this.type);
-    JsonNode jsonResponse = this.mapper.convertValue(response, JsonNode.class);
-    MessageJson message = new MessageJson("join", jsonResponse);
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
+    this.outputMessage("join", response);
   }
 
   /**
@@ -117,10 +114,7 @@ public class ProxyController implements GameController {
     List<Ship> setupShips = this.player.setup(parsed.height(), parsed.width(), parsed.fleetSpec());
     
     FleetJson response = new FleetJson(setupShips);
-    JsonNode jsonResponse = this.mapper.convertValue(response, JsonNode.class);
-    MessageJson message = new MessageJson("setup", jsonResponse);
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
+    this.outputMessage("setup", response);
   }
 
   /**
@@ -128,11 +122,7 @@ public class ProxyController implements GameController {
    */
   private void handleTakeShots() {
     CoordinatesJson response = new CoordinatesJson(this.player.takeShots());
-    JsonNode jsonResponse = this.mapper.convertValue(response, JsonNode.class);
-    MessageJson message = new MessageJson("take-shots", jsonResponse);
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
-    System.out.println(jsonMessage);
+    this.outputMessage("take-shots", response);
   }
 
   /**
@@ -145,10 +135,7 @@ public class ProxyController implements GameController {
     List<Coord> coords = this.player.reportDamage(parsed.coordinates());
 
     CoordinatesJson response = new CoordinatesJson(coords);
-    JsonNode jsonResponse = this.mapper.convertValue(response, JsonNode.class);
-    MessageJson message = new MessageJson("report-damage", jsonResponse);
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
+    this.outputMessage("report-damage", response);
   }
 
   /**
@@ -159,10 +146,8 @@ public class ProxyController implements GameController {
   private void handleSuccessfulHits(JsonNode arguments) {
     CoordinatesJson parsed = this.mapper.convertValue(arguments, CoordinatesJson.class);
     this.player.successfulHits(parsed.coordinates());
-
-    MessageJson message = new MessageJson("successful-hits", this.mapper.createObjectNode());
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
+    
+    this.outputNullMessage("successful-hits");
   }
 
   /**
@@ -173,13 +158,38 @@ public class ProxyController implements GameController {
   private void handleEndGame(JsonNode arguments) throws IOException {
     EndJson parsed = this.mapper.convertValue(arguments, EndJson.class);
     this.player.endGame(parsed.result(), parsed.reason());
-    
-    MessageJson message = new MessageJson("end-game", this.mapper.createObjectNode());
-    JsonNode jsonMessage = this.mapper.convertValue(message, JsonNode.class);
-    this.out.println(jsonMessage);
+
+    this.outputNullMessage("end-game");
     
     System.out.println(parsed.result());
     System.out.println(parsed.reason());
     this.server.close();
+  }
+
+  /**
+   * Create a MessageJson for some name and arguments, 
+   * then print it to the output
+   *
+   * @param methodName the method name of the message
+   * @param messageObject object to embed in the MessageJson
+   */
+  private void outputMessage(String methodName, Record messageObject) {
+    // convert given record to MessageJson record
+    MessageJson message = new MessageJson(methodName,
+        this.mapper.convertValue(messageObject, JsonNode.class));
+
+    // convert MessageJson record to JsonNode and print
+    this.out.println(mapper.convertValue(message, JsonNode.class));
+  }
+
+  /**
+   * Create a MessageJson with null arguments for some method name,
+   * then print it to the output
+   *
+   * @param methodName the method name of the message
+   */
+  private void outputNullMessage(String methodName) {
+    MessageJson message = new MessageJson(methodName, this.mapper.createObjectNode());
+    this.out.println(this.mapper.convertValue(message, JsonNode.class));
   }
 }
