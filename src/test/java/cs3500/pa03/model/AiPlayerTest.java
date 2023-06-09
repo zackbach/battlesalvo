@@ -57,12 +57,12 @@ class AiPlayerTest {
   @Test
   public void testTakeShots() {
     // unlike above, use seeded random here
-    Player ai = new AiPlayer(new Random(1));
     Map<ShipType, Integer> specs = new HashMap<>();
     specs.put(ShipType.CARRIER, 2);
     specs.put(ShipType.BATTLESHIP, 1);
     specs.put(ShipType.DESTROYER, 1);
     specs.put(ShipType.SUBMARINE, 1);
+    Player ai = new AiPlayer(new Random(1));
     ai.setup(6, 6, specs);
     
     // tests that takeShots generates a random list of shots among possible targets

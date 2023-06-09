@@ -22,7 +22,6 @@ public class ProxyController implements GameController {
   private final InputStream in;
   private final PrintStream out;
   private final Player player;
-  private final GameType type;
   private final ObjectMapper mapper;
 
   /**
@@ -32,31 +31,20 @@ public class ProxyController implements GameController {
    * @param player the player that is playing on the server
    * @throws IOException if there is an error with the Socket
    */
-  public ProxyController(Socket server, Player player, GameType type) throws IOException {
+  public ProxyController(Socket server, Player player) throws IOException {
     this.server = server;
     this.in = server.getInputStream();
     this.out = new PrintStream(server.getOutputStream());
     this.player = player;
-    this.type = type;
     this.mapper = new ObjectMapper();
-  }
-
-  /**
-   * Constructs a new ProxyController using the given socket and player,
-   * with a default GameType of single-player
-   *
-   * @param server the server to connect to
-   * @param player the player that is playing on the server
-   * @throws IOException if there is an error with the Socket
-   */
-  public ProxyController(Socket server, Player player) throws IOException {
-    this(server, player, GameType.SINGLE);
   }
 
   /**
    * Begins and runs game of BattleSalvo, starting the gameplay loop. Listens to the
    * server to receive JSON messages, then parses, processes, and sends responses
    * using the behavior of the Player.
+   *
+   * @throws RuntimeException if the server's input cannot be received and parsed
    */
   @Override
   public void run() {
@@ -70,8 +58,7 @@ public class ProxyController implements GameController {
         this.delegateMessage(message);
       }
     } catch (IOException e) {
-      // Disconnected from server or parsing exception
-      // TODO: Do we have to do anything here?
+      throw new RuntimeException(e.getMessage());
     }
   }
 
@@ -100,7 +87,8 @@ public class ProxyController implements GameController {
    * Handles a response to join a game
    */
   private void handleJoin() {
-    JoinJson response = new JoinJson(this.player.name(), this.type);
+    // as per Piazza, hard-coded to be a single player game for the time being
+    JoinJson response = new JoinJson(this.player.name(), GameType.SINGLE);
     this.outputMessage("join", response);
   }
 
