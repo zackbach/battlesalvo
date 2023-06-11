@@ -20,6 +20,9 @@ public class Driver {
    * @param args - no command line args required
    */
   public static void main(String[] args) {
+    // as per Piazza @1119, Driver is not tested directly
+    // all it does is initialize / call .run() and handle errors
+    
     // if host and port are provided -> start a server game
     if (args.length == 2) {
       try (Socket server = new Socket(args[0], Integer.parseInt(args[1]))) {
