@@ -70,6 +70,7 @@ public class ProxyController implements GameController {
    */
   private void delegateMessage(MessageJson message) throws IOException {
     String name = message.methodName();
+    System.out.println("Received message named " + name);
     JsonNode arguments = message.arguments();
 
     switch (name) {
@@ -88,7 +89,7 @@ public class ProxyController implements GameController {
    */
   private void handleJoin() {
     // as per Piazza, hard-coded to be a single player game for the time being
-    JoinJson response = new JoinJson(this.player.name(), GameType.SINGLE);
+    JoinJson response = new JoinJson(this.player.name(), GameType.MULTI);
     this.outputMessage("join", response);
   }
 

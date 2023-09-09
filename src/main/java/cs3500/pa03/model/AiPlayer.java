@@ -3,6 +3,7 @@ package cs3500.pa03.model;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
@@ -38,7 +39,7 @@ public class AiPlayer extends AbstractPlayer {
   @Override
   public String name() {
     // as per Piazza @777_f1, hardcoded player name = github username
-    return "zackbach";
+    return "pa04-e10";
   }
 
   /**
@@ -72,6 +73,8 @@ public class AiPlayer extends AbstractPlayer {
     // this will fire shots equal to the number of unfired locations 
     List<Coord> randomShots = randomOptions.stream()
                                            .filter(c -> !shots.contains(c))
+                                           .sorted(
+                                               Comparator.comparingInt(c -> ((c.x() + c.y()) % 3)))
                                            .limit(volleySize)
                                            .toList();
     
